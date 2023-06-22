@@ -20,7 +20,7 @@ def main_menu():
 
 def student_menu():
     while True:
-        print("\n Student Menu")
+        print("\nStudent Menu")
         print("1. Write Student Data")
         print("2. List Student Data")
         print("3. Edit Student Data")
@@ -29,7 +29,7 @@ def student_menu():
         print("6. Search Student by Name Data")
         print("7. Back to Main Menu")
 
-        choice = input("\n Enter your choice (1-7): ")
+        choice = input("\nEnter your choice (1-7): ")
 
         if choice == "1":
             write_student_data()
@@ -46,11 +46,11 @@ def student_menu():
         elif choice == "7":
             break
         else:
-            print("\n Invalid choice. Please try again.")
+            print("\nInvalid choice. Please try again.")
 
 def course_menu():
     while True:
-        print("\n Course Menu")
+        print("\nCourse Menu")
         print("1. Write Course Data")
         print("2. List Course Data")
         print("3. Edit Course Data")
@@ -58,7 +58,7 @@ def course_menu():
         print("5. Search Course")
         print("6. Back to Main Menu")
 
-        choice = input("\n Enter your choice (1-6): ")
+        choice = input("\nEnter your choice (1-6): ")
 
         if choice == "1":
             write_course_data()
@@ -73,15 +73,14 @@ def course_menu():
         elif choice == "6":
             break
         else:
-            print("\n Invalid choice. Please try again.")
+            print("\nInvalid choice. Please try again.")
 
 def write_student_data():
     while True:
-        id_number = input("\n Enter ID Number (or 'q' to quit): ")
+        id_number = input("\nEnter ID Number (or 'q' to quit): ")
         if id_number == 'q':
             break
 
-        # Check if student with the same ID already exists
         if is_student_exists(id_number):
             print("This student already exists.")
             continue
@@ -95,7 +94,7 @@ def write_student_data():
         student_data = [id_number, first_name, last_name, gender, year, course]
         append_student_data(student_data)
 
-    print("\n Student Data written successfully.")
+    print("\nStudent Data written successfully.")
 
 def is_student_exists(id_number):
     with open('students.csv', 'r') as file:
@@ -119,7 +118,7 @@ def list_student_data():
 
 def edit_student_data():
     while True:
-        id_number = input("\n Enter ID Number to edit (or 'q' to quit): ")
+        id_number = input("\nEnter ID Number to edit (or 'q' to quit): ")
         if id_number == 'q':
             break
 
@@ -150,7 +149,7 @@ def edit_student_data():
 
 def delete_student_data():
     while True:
-        id_number = input("\n Enter ID Number to delete (or 'q' to quit): ")
+        id_number = input("\nEnter ID Number to delete (or 'q' to quit): ")
         if id_number == 'q':
             break
 
@@ -175,7 +174,7 @@ def delete_student_data():
 
 def search_student_year():
     while True:
-        year = input("\n Enter the Year of student (or 'q' to quit): ")
+        year = input("\nEnter the Year of student (or 'q' to quit): ")
         if year == 'q':
             break
 
@@ -184,14 +183,14 @@ def search_student_year():
             found = False
             for row in reader:
                 if row[4] == year:
-                    print(row)
+                    print(row[:-1])  # Exclude the last element (course) in the output
                     found = True
             if not found:
                 print("Student does not exist.")
 
 def search_student_name():
     while True:
-        name = input("\n Enter the first name of student (or 'q' to quit): ")
+        name = input("\nEnter the first name of student (or 'q' to quit): ")
         if name == 'q':
             break
 
@@ -200,33 +199,33 @@ def search_student_name():
             found = False
             for row in reader:
                 if name.lower() in row[1].lower() or name.lower() in row[2].lower():
-                    print(row)
+                    print(row[:-1])  # Exclude the last element (course) in the output
                     found = True
             if not found:
                 print("Student does not exist.")
 
 def write_course_data():
     while True:
-        course_code = input("\n Enter Course Code (or 'q' to quit): ")
-        if course_code == 'q':
+        course_name = input("\nEnter Course Name (or 'q' to quit): ")
+        if course_name == 'q':
             break
 
-        if does_course_exists(course_code):
+        if does_course_exists(course_name):
             print("This course already exists.")
             continue
 
-        name = input("Enter Name: ")
+        course_code = input("Enter Course Code: ")
         college = input("Enter College: ")
-        course_data = [course_code, name, college]
+        course_data = [course_name, course_code, college]
         append_course_data(course_data)
 
-    print("\n Course Data written successfully.")
+        print("\nCourse Data written successfully.")
 
-def does_course_exists(course_code):
+def does_course_exists(course_name):
     with open('courses.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if row[0] == course_code:
+            if row[0] == course_name:
                 return True
     return False
 
@@ -240,12 +239,12 @@ def list_course_data():
         reader = csv.reader(file)
         for row in reader:
             print(row)
-    print("\n Course Data listed successfully.")
+    print("\nCourse Data listed successfully.")
 
 def edit_course_data():
     while True:
-        course_code = input("\n Enter Course Code to edit (or 'q' to quit): ")
-        if course_code == 'q':
+        course_name = input("\nEnter Course Code to edit (or 'q' to quit): ")
+        if course_name == 'q':
             break
 
         courses_data = []
@@ -254,10 +253,10 @@ def edit_course_data():
         with open('courses.csv', 'r') as file:
             reader = csv.reader(file)
             for row in reader:
-                if row[0] == course_code:
+                if row[0] == course_name:
                     name = input("Enter new Name: ")
                     college = input("Enter new College: ")
-                    courses_data.append([row[0], name, college])
+                    courses_data.append([course_name, name, college])
                     found = True
                 else:
                     courses_data.append(row)
@@ -266,14 +265,14 @@ def edit_course_data():
             with open('courses.csv', 'w', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerows(courses_data)
-            print("\n Course data updated successfully.")
+            print("Course data updated successfully.")
         else:
-            print("\n Course not found.")
+            print("Course not found.")
 
 def delete_course_data():
     while True:
-        course_code = input("\n Enter Course Code to delete (or 'q' to quit): ")
-        if course_code == 'q':
+        course_name = input("\nEnter Course Name to delete (or 'q' to quit): ")
+        if course_name == 'q':
             break
 
         courses_data = []
@@ -282,7 +281,7 @@ def delete_course_data():
         with open('courses.csv', 'r') as file:
             reader = csv.reader(file)
             for row in reader:
-                if row[0] == course_code:
+                if row[0] == course_name:
                     found = True
                 else:
                     courses_data.append(row)
@@ -291,20 +290,37 @@ def delete_course_data():
             with open('courses.csv', 'w', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerows(courses_data)
+
+            # Delete the course from student data
+            students_data = []
+            with open('students.csv', 'r') as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    if row[5] != course_name:  # Exclude students enrolled in the deleted course
+                        students_data.append(row[:-1])  # Exclude the last element (course) in the output
+
+            with open('students.csv', 'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerows(students_data)
+
             print("Course data deleted successfully.")
         else:
             print("Course not found.")
 
 def search_courses():
     while True:
-        course_code = input("\n Enter the Course Code to search course (or 'q' to quit): ")
-        if course_code == 'q':
+        search_query = input("\nEnter a Course Code or Name (or 'q' to quit): ")
+        if search_query == 'q':
             break
 
         with open('courses.csv', 'r') as file:
             reader = csv.reader(file)
+            found = False
             for row in reader:
-                if row[0] == course_code:
+                if search_query.lower() in row[0].lower() or search_query.lower() in row[1].lower():
                     print(row)
+                    found = True
+            if not found:
+                print("Course not found.")
 
 main_menu()
