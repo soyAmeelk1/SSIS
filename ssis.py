@@ -89,7 +89,7 @@ def write_student_data():
         last_name = input("Enter Last Name: ")
         gender = input("Enter Gender: ")
         year = input("Enter Year: ")
-        course = input("Enter Course: ")
+        course = input("Enter Course Name: ")
 
         student_data = [id_number, first_name, last_name, gender, year, course]
         append_student_data(student_data)
@@ -296,8 +296,11 @@ def delete_course_data():
             with open('students.csv', 'r') as file:
                 reader = csv.reader(file)
                 for row in reader:
-                    if row[5] != course_name:  # Exclude students enrolled in the deleted course
-                        students_data.append(row[:-1])  # Exclude the last element (course) in the output
+                    if row[5] == course_name: # Delete course from row
+                        row[5] = ''
+                        students_data.append(row)
+                    else:
+                        students_data.append(row)
 
             with open('students.csv', 'w', newline='') as file:
                 writer = csv.writer(file)
