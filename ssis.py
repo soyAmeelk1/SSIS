@@ -182,7 +182,7 @@ def search_student_year():
             reader = csv.reader(file)
             found = False
             for row in reader:
-                if row[4] == year:
+                if row[4].strip() == year.strip():  # Use strip() to remove whitespace
                     print(row[:-1])  # Exclude the last element (course) in the output
                     found = True
             if not found:
@@ -243,7 +243,7 @@ def list_course_data():
 
 def edit_course_data():
     while True:
-        course_name = input("\nEnter Course Code to edit (or 'q' to quit): ")
+        course_name = input("\nEnter Course Name to edit (or 'q' to quit): ")
         if course_name == 'q':
             break
 
@@ -254,9 +254,9 @@ def edit_course_data():
             reader = csv.reader(file)
             for row in reader:
                 if row[0] == course_name:
-                    name = input("Enter new Name: ")
+                    code = input("Enter new code: ")
                     college = input("Enter new College: ")
-                    courses_data.append([course_name, name, college])
+                    courses_data.append([course_name, code, college])
                     found = True
                 else:
                     courses_data.append(row)
@@ -276,6 +276,8 @@ def delete_course_data():
             break
 
         courses_data = []
+        students_data = []  # Collect students not enrolled in the deleted course
+
         found = False
 
         with open('courses.csv', 'r') as file:
@@ -291,24 +293,22 @@ def delete_course_data():
                 writer = csv.writer(file)
                 writer.writerows(courses_data)
 
-            # Delete the course from student data
-            students_data = []
             with open('students.csv', 'r') as file:
                 reader = csv.reader(file)
                 for row in reader:
-                    if row[5] == course_name: # Delete course from row
-                        row[5] = ''
-                        students_data.append(row)
-                    else:
+                    if row[5] != course_name:  # Keep students not enrolled in the deleted course
                         students_data.append(row)
 
             with open('students.csv', 'w', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerows(students_data)
 
-            print("Course data deleted successfully.")
+            print("Course data and associated student data deleted successfully.")
         else:
             print("Course not found.")
+
+        # Call the main menu to return to the main program loop
+        main_menu()
 
 def search_courses():
     while True:
